@@ -1,6 +1,6 @@
 import "./App.css";
 import { Outlet } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import Nav from "./components/Nav";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { trpc } from "./utils/trpc";
@@ -20,13 +20,20 @@ function App() {
         sx={{
           display: "flex",
           flexDirection: "row",
-          borderBottom: "1px solid grey",
+          pb: 2,
+          pt: 2,
+          m: 1,
         }}
       >
         Monch.io
       </Box>
-      <Box component={"main"} sx={{ display: "flex", flexDirection: "row" }}>
+      <Divider />
+      <Box
+        component={"main"}
+        sx={{ display: "flex", flexDirection: "row", height: "100%" }}
+      >
         <Nav />
+        <Divider orientation="vertical" flexItem />
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <Box sx={{ flex: 1, p: 2 }}>
