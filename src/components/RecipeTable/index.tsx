@@ -1,10 +1,38 @@
-import { Chip, Stack, Typography } from "@mui/material";
+import { Chip, GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import type { Recipe } from "monch-backend/src/types/recipe";
+import type { RecipeWithoutIngredients } from "monch-backend/src/types/recipe";
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
+
+type RecipeLinkProps = {
+  name?: string;
+  id: string;
+};
+
+export const RecipeLink = ({ name, id }: RecipeLinkProps) => {
+  return (
+    <>
+      <GlobalStyles
+        styles={(theme) => ({
+          ".hoverable": {
+            textDecoration: "none !important",
+            color: theme.palette.text.primary,
+            cursor: "pointer",
+            "&:hover": {
+              color: theme.palette.primary.main,
+            },
+          },
+        })}
+      />
+      <Link className="hoverable" to={`/recipes/${id}`}>
+        {name || id}
+      </Link>
+    </>
+  );
+};
 
 type RecipeTableProps = {
-  items: Recipe[];
+  items: RecipeWithoutIngredients[];
   pageSize?: number;
 };
 
@@ -16,8 +44,8 @@ const RecipeTable = ({ items, pageSize = 20 }: RecipeTableProps) => {
         {
           field: "name",
           headerName: "Name",
-          valueGetter: (values) => {
-            return values.row.name;
+          renderCell: (values) => {
+            return <RecipeLink name={values.row.name} id={values.row.id} />;
           },
           width: 200,
         },
@@ -42,6 +70,14 @@ const RecipeTable = ({ items, pageSize = 20 }: RecipeTableProps) => {
             );
           },
           width: 300,
+        },
+        {
+          field: "canPrepare",
+          headerName: "Can prepare",
+          renderCell: () => {
+            return "unknown"; // @@TODO: accept information about whether it could be prepared
+          },
+          width: 200,
         },
       ]}
       rowsPerPageOptions={[pageSize]}

@@ -1,6 +1,35 @@
-import { Stack, Typography } from "@mui/material";
+import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { Meal } from "monch-backend/src/types/meal";
+import { Link } from "react-router-dom";
+import { RecipeLink } from "../RecipeTable";
+
+type MealLinkProps = {
+  name: string;
+  id: string;
+};
+
+export const MealLink = ({ name, id }: MealLinkProps) => {
+  return (
+    <>
+      <GlobalStyles
+        styles={(theme) => ({
+          ".hoverable": {
+            textDecoration: "none !important",
+            color: theme.palette.text.primary,
+            cursor: "pointer",
+            "&:hover": {
+              color: theme.palette.primary.main,
+            },
+          },
+        })}
+      />
+      <Link className="hoverable" to={`/meals/${id}`}>
+        {name}
+      </Link>
+    </>
+  );
+};
 
 type MealTableProps = {
   items: Meal[];
@@ -15,8 +44,8 @@ const MealTable = ({ items, pageSize = 20 }: MealTableProps) => {
         {
           field: "recipeId",
           headerName: "Recipe",
-          valueGetter: (values) => {
-            return values.row.recipeId;
+          renderCell: (values) => {
+            return <RecipeLink id={values.row.recipeId} />;
           },
           width: 200,
         },

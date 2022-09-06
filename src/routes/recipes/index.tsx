@@ -1,8 +1,17 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import { RecipeWithoutIngredients } from "monch-backend/src/types/recipe";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import RecipeTable from "../../components/RecipeTable";
 import Search from "../../components/Search";
+
+const items: RecipeWithoutIngredients[] = [
+  {
+    name: "curry",
+    description: "bing",
+    id: "123",
+    tags: ["spicy"],
+  },
+];
 
 const Recipes = () => {
   const [recipesSearch, setRecipesSearch] = useState("");
@@ -12,33 +21,12 @@ const Recipes = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          pb: 1,
-        }}
-      >
-        <Typography variant={"h4"}>Recipes</Typography>
-
-        <Link
-          to="/recipes/new"
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <Button variant="contained">Create</Button>
-        </Link>
-      </Box>
-      <Divider />
+    <>
+      <Search text={"Search recipes"} onChange={setRecipesSearch} />
       <Box sx={{ pt: 1 }}>
-        <Search text={"Search recipes"} onChange={setRecipesSearch} />
-        <Box sx={{ pt: 1 }}>
-          <RecipeTable items={[]} />
-        </Box>
+        <RecipeTable items={items} />
       </Box>
-    </Box>
+    </>
   );
 };
 

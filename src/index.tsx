@@ -15,6 +15,7 @@ import Meals from "./routes/meals";
 import CreateMeal from "./routes/meals/create";
 import ViewMeal from "./routes/meals/view";
 import NotFound from "./routes/not-found";
+import ContentLayout from "./views/Content";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -25,17 +26,26 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Dashboard />} />
-          <Route path="recipes">
+          <Route
+            path="recipes"
+            element={<ContentLayout title="Recipes" kind="recipes" />}
+          >
             <Route path=":recipeId" element={<ViewRecipe />} />
             <Route path="new" element={<CreateRecipe />} />
             <Route index element={<Recipes />} />
           </Route>
-          <Route path="ingredients">
+          <Route
+            path="ingredients"
+            element={<ContentLayout title="Ingredients" kind="ingredients" />}
+          >
             <Route path=":ingredientId" element={<ViewIngredient />} />
             <Route path="new" element={<CreateIngredient />} />
             <Route index element={<Ingredients />} />
           </Route>
-          <Route path="meals">
+          <Route
+            path="meals"
+            element={<ContentLayout title="Meals" kind="meals" />}
+          >
             <Route path=":mealId" element={<ViewMeal />} />
             <Route path="new" element={<CreateMeal />} />
             <Route index element={<Meals />} />

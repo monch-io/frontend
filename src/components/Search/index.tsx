@@ -36,6 +36,7 @@ export default function Search({ text = "Search", onChange }: SearchProps) {
       renderInput={(params) => (
         <TextField
           {...params}
+          className=""
           variant="outlined"
           size="small"
           placeholder={text}

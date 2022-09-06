@@ -1,7 +1,11 @@
 import { Box } from "@mui/material";
 
 const CreateRecipe = () => {
-  return <Box>Create Recipe</Box>;
+  return (
+    <>
+      <Box sx={{ pt: 1 }}>Create recipe</Box>
+    </>
+  );
 };
 
 export default CreateRecipe;

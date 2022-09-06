@@ -1,6 +1,34 @@
-import { Stack, Typography } from "@mui/material";
+import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { Ingredient } from "monch-backend/src/types/ingredient";
+import { Link } from "react-router-dom";
+
+type IngredientLinkProps = {
+  name: string;
+  id: string;
+};
+
+export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
+  return (
+    <>
+      <GlobalStyles
+        styles={(theme) => ({
+          ".hoverable": {
+            textDecoration: "none !important",
+            color: theme.palette.text.primary,
+            cursor: "pointer",
+            "&:hover": {
+              color: theme.palette.primary.main,
+            },
+          },
+        })}
+      />
+      <Link className="hoverable" to={`/ingredients/${id}`}>
+        {name}
+      </Link>
+    </>
+  );
+};
 
 type IngredientTableProps = {
   items: Ingredient[];
