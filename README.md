@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Configuration 
+
+The frontend uses environment variables to store some configuration parameters that are
+environment specific. The file that is used by the server is called `.env`. It should 
+be created in the root of the disk and this is the contents that should be within the 
+disk:
+```
+# API Endpoint
+REACT_APP_API_ENDPOINT=
+```
+**Note**: `sample.env` has an example copy of a partial configuration.
+
 ## Available Scripts
 
 In the project directory, you can run:
