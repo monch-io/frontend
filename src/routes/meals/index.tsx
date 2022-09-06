@@ -1,10 +1,15 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import MealTable from "../../components/MealTable";
 import Search from "../../components/Search";
 
 const Meals = () => {
   const [mealSearch, setMealSearch] = useState("");
+
+  useEffect(() => {
+    console.log(mealSearch);
+  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -29,7 +34,9 @@ const Meals = () => {
       <Divider />
       <Box sx={{ pt: 1 }}>
         <Search text={"Search meals"} onChange={setMealSearch} />
-        table {mealSearch}
+        <Box sx={{ pt: 1 }}>
+          <MealTable items={[]} />
+        </Box>
       </Box>
     </Box>
   );

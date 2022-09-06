@@ -11,9 +11,8 @@ export default function Search({ text = "Search", onChange }: SearchProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
 
-
   useEffect(() => {
-    onChange(input)
+    onChange(input);
   }, [input]);
 
   return (
