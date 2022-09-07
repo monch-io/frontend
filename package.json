@@ -33,6 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "fmt": "prettier --write src",
+    "check-fmt": "prettier --check \"./src/**/*.(ts|tsx)\"",
     "lint": "eslint src",
     "pr": "yarn fmt && yarn lint && yarn build"
   },
