@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
-type ContentKind = "recipes" | "meals" | "ingredients";
+type ContentKind = "recipes" | "meals" | "ingredients" | "inventory";
 
 type ContentLayoutProps = {
   title: string;

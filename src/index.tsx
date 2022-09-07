@@ -16,6 +16,7 @@ import CreateMeal from "./routes/meals/create";
 import ViewMeal from "./routes/meals/view";
 import NotFound from "./routes/not-found";
 import ContentLayout from "./views/Content";
+import Inventory from "./routes/inventory";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -49,6 +50,12 @@ root.render(
             <Route path=":mealId" element={<ViewMeal />} />
             <Route path="new" element={<CreateMeal />} />
             <Route index element={<Meals />} />
+          </Route>
+          <Route
+            path="inventory"
+            element={<ContentLayout title="Inventory" kind="inventory" />}
+          >
+            <Route index element={<Inventory />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
