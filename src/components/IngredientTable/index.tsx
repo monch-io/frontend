@@ -1,6 +1,7 @@
 import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { Ingredient } from "monch-backend/build/types/ingredient";
+import { Pagination } from "monch-backend/build/types/pagination";
 import { Link } from "react-router-dom";
 
 type IngredientLinkProps = {
@@ -31,18 +32,30 @@ export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
 };
 
 type IngredientTableProps = {
+  // All of the shown items
   items: Ingredient[];
-  pageSize?: number;
+
+  // Current pagination state.
+  pagination: Pagination;
+
+  // Function that handles pagination changes from the table
+  onPaginationChange: (value: Pagination) => void;
 };
 
-const IngredientTable = ({ items, pageSize = 20 }: IngredientTableProps) => {
+const IngredientTable = ({
+  items,
+  pagination,
+  onPaginationChange,
+}: IngredientTableProps) => {
   return (
     <DataGrid
       autoHeight
+      checkboxSelection
       columns={[
         {
           field: "name",
           headerName: "Name",
+          editable: true,
           valueGetter: (values) => {
             return values.row.name;
           },
@@ -50,15 +63,25 @@ const IngredientTable = ({ items, pageSize = 20 }: IngredientTableProps) => {
         },
         {
           field: "quantityType",
+          editable: true,
           headerName: "Quantity Kind",
+          type: "singleSelect",
+          valueOptions: ["weight", "volume", "piece"],
           valueGetter: (values) => {
-            return values.row.quantityType;
+            return values.row.dimension;
           },
           width: 200,
         },
       ]}
-      rowsPerPageOptions={[pageSize]}
-      pageSize={pageSize}
+      onCellEditCommit={(details) => {
+        console.log(details);
+      }}
+      rowsPerPageOptions={[pagination.take]}
+      pageSize={pagination.take}
+      onPageChange={(page) =>
+        onPaginationChange({ ...pagination, skip: page * pagination.take })
+      }
+      onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
       rows={items}
       components={{
         NoRowsOverlay: () => (

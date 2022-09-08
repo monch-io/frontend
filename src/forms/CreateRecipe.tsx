@@ -46,7 +46,6 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
       ingredients: [],
     },
   });
-  console.log(errors, isValid);
 
   // Register the input field for the sets
   const { fields, append, remove } = useFieldArray({
@@ -126,7 +125,10 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
                   <TextField
                     size="small"
                     variant="outlined"
-                    {...register(`ingredients.${index}.quantity`)}
+                    type="number"
+                    {...register(`ingredients.${index}.quantity`, {
+                      valueAsNumber: true,
+                    })}
                     {...(quantityError !== ""
                       ? {
                           error: true,
@@ -160,7 +162,10 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
           })}
           <Button
             onClick={() =>
-              append({ ingredientId: "", quantity: 0, unit: "unit" })
+              append({
+                ingredientId: "",
+                quantity: { value: 0, unit: "piece" },
+              })
             }
           >
             Add ingredient

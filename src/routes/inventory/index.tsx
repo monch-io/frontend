@@ -1,14 +1,10 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Search from "../../components/Field/Search";
 import InventoryTable from "../../components/InventoryTable";
 
 const Inventory = () => {
-  const [inventorySearch, setInventorySearch] = useState("");
-
-  useEffect(() => {
-    console.log(inventorySearch);
-  }, []);
+  const [_inventorySearch, setInventorySearch] = useState("");
 
   return (
     <>

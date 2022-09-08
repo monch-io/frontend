@@ -1,5 +1,6 @@
 import { Chip, GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { Pagination } from "monch-backend/build/types/pagination";
 import type { RecipeWithoutIngredients } from "monch-backend/build/types/recipe";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
@@ -32,11 +33,19 @@ export const RecipeLink = ({ name, id }: RecipeLinkProps) => {
 };
 
 type RecipeTableProps = {
+  // Meals that are returned from query.
   items: RecipeWithoutIngredients[];
-  pageSize?: number;
+  // Current pagination state.
+  pagination: Pagination;
+  // Function that handles pagination changes from the table
+  onPaginationChange: (value: Pagination) => void;
 };
 
-const RecipeTable = ({ items, pageSize = 20 }: RecipeTableProps) => {
+const RecipeTable = ({
+  items,
+  pagination,
+  onPaginationChange,
+}: RecipeTableProps) => {
   return (
     <DataGrid
       autoHeight
@@ -80,8 +89,12 @@ const RecipeTable = ({ items, pageSize = 20 }: RecipeTableProps) => {
           width: 200,
         },
       ]}
-      rowsPerPageOptions={[pageSize]}
-      pageSize={pageSize}
+      rowsPerPageOptions={[pagination.take]}
+      pageSize={pagination.take}
+      onPageChange={(page) =>
+        onPaginationChange({ ...pagination, skip: page * pagination.take })
+      }
+      onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
       rows={items}
       components={{
         NoRowsOverlay: () => (

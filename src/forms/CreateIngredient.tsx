@@ -66,16 +66,17 @@ function CreateIngredientForm({ onCompletion }: CreateIngredientFormProps) {
           <FieldLabel label="Quantity Kind" required />
           <FormControl fullWidth>
             <Select
-              {...register(`quantityType`)}
-              defaultValue="continuous"
+              {...register("dimension")}
+              defaultValue="amount"
               size="small"
               sx={{
                 marginTop: 1,
                 marginBottom: 1,
               }}
             >
-              <MenuItem value="continuous">continuous</MenuItem>
-              <MenuItem value="discrete">discrete</MenuItem>
+              <MenuItem value="amount">amount</MenuItem>
+              <MenuItem value="weight">weight</MenuItem>
+              <MenuItem value="volume">volume</MenuItem>
             </Select>
           </FormControl>
         </Grid>
