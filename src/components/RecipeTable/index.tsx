@@ -1,6 +1,6 @@
 import { Chip, GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import type { RecipeWithoutIngredients } from "monch-backend/src/types/recipe";
+import type { RecipeWithoutIngredients } from "monch-backend/build/types/recipe";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 

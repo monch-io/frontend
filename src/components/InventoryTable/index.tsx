@@ -1,21 +1,24 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Stack, Typography } from "@mui/material";
-import type { QuantifiedIngredient } from "monch-backend/src/types/quantified-ingredient";
-import { z } from "zod";
+import type { QuantifiedIngredient } from "monch-backend/build/types/quantified-ingredient";
 import { IngredientLink } from "../IngredientTable";
-import { QuantityType } from "monch-backend/src/types/quantity-type";
-
-// @@Temp: Backend needs to export `QuantifiedIngredient` interface
-interface QuantifiedIngredient extends z.infer<typeof QuantifiedIngredient> {}
+import type {
+  QuantityType,
+  Unit,
+} from "monch-backend/build/types/quantity-type";
 
 type RecipeTableProps = {
   items: QuantifiedIngredient[];
   pageSize?: number;
 };
 
-function formatQuantity(amount: number, quantityType: QuantityType): string {
+function formatQuantity(
+  amount: number,
+  unit: Unit,
+  quantityType: QuantityType
+): string {
   if (quantityType === "continuous") {
-    return `${amount}`;
+    return `${amount}${unit}`;
   } else {
     return `${amount}`;
   }
@@ -45,6 +48,7 @@ const InventoryTable = ({ items, pageSize = 20 }: RecipeTableProps) => {
           renderCell: (values) => {
             return formatQuantity(
               values.row.quantity,
+              values.row.unit,
               values.row.ingredient.quantityType
             );
           },

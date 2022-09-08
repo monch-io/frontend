@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import Search from "../../components/Field/Search";
 import IngredientTable from "../../components/IngredientTable";
-import Search from "../../components/Search";
 
 const Ingredients = () => {
   const [ingredient, setIngredientSearch] = useState("");

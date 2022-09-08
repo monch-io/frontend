@@ -1,6 +1,6 @@
 import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import type { Meal } from "monch-backend/src/types/meal";
+import type { Meal } from "monch-backend/build/types/meal";
 import { Link } from "react-router-dom";
 import { RecipeLink } from "../RecipeTable";
 

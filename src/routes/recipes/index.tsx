@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
-import { RecipeWithoutIngredients } from "monch-backend/src/types/recipe";
+import { RecipeWithoutIngredients } from "monch-backend/build/types/recipe";
 import { useEffect, useState } from "react";
+import Search from "../../components/Field/Search";
 import RecipeTable from "../../components/RecipeTable";
-import Search from "../../components/Search";
 
 const items: RecipeWithoutIngredients[] = [
   {

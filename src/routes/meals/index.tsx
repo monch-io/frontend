@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import Search from "../../components/Field/Search";
 import MealTable from "../../components/MealTable";
-import Search from "../../components/Search";
 
 const Meals = () => {
   const [mealSearch, setMealSearch] = useState("");

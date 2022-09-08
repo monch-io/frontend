@@ -1,6 +1,6 @@
 import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import type { Ingredient } from "monch-backend/src/types/ingredient";
+import type { Ingredient } from "monch-backend/build/types/ingredient";
 import { Link } from "react-router-dom";
 
 type IngredientLinkProps = {
