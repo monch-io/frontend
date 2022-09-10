@@ -9,7 +9,7 @@ type RecipeTableProps = {
   pageSize?: number;
 };
 
-function formatQuantity(amount: number, unit: Unit): string {
+function formatQuantity(amount: number, unit: Unit | undefined): string {
   if (unit !== "piece") {
     return `${amount}${unit}`;
   } else {

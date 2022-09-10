@@ -125,7 +125,7 @@ function MutateIngredientForm({
         <Grid item xs={12} sx={{ pt: 1 }}></Grid>
         <Grid>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {error !== "undefined" && <ErrorBanner message={error} />}
+            {error !== "" && <ErrorBanner message={error} />}
             <Box
               sx={{
                 display: "flex",
