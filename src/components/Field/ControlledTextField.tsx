@@ -8,11 +8,11 @@ interface ControlledTextFieldProps<T extends FieldValues> {
   textFieldProps?: TextFieldProps;
 }
 
-export default function ControlledTextField<T extends FieldValues>({
+const ControlledTextField = <T extends FieldValues>({
   name,
   control,
   textFieldProps,
-}: ControlledTextFieldProps<T>): ReactElement {
+}: ControlledTextFieldProps<T>): ReactElement => {
   const {
     field: { ref: _, ...inputProps },
     fieldState: { error },
@@ -38,4 +38,6 @@ export default function ControlledTextField<T extends FieldValues>({
       })}
     />
   );
-}
+};
+
+export default ControlledTextField;

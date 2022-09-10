@@ -5,10 +5,10 @@ import { Pagination } from "monch-backend/build/types/pagination";
 import { Link } from "react-router-dom";
 import { RecipeLink } from "../RecipeTable";
 
-type MealLinkProps = {
+interface MealLinkProps {
   name: string;
   id: string;
-};
+}
 
 export const MealLink = ({ name, id }: MealLinkProps) => {
   return (

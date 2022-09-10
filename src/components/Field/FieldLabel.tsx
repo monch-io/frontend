@@ -1,15 +1,12 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-type FieldLabelProps = {
+interface FieldLabelProps {
   label: string;
   required?: boolean;
-};
+}
 
-export default function FieldLabel({
-  label,
-  required = true,
-}: FieldLabelProps) {
+const FieldLabel = ({ label, required = true }: FieldLabelProps) => {
   return (
     <Typography variant={"body2"} sx={{ fontWeight: "bold" }}>
       {label}
@@ -20,4 +17,6 @@ export default function FieldLabel({
       )}
     </Typography>
   );
-}
+};
+
+export default FieldLabel;

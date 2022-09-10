@@ -7,10 +7,7 @@ interface ErrorBannerProps {
   errors?: Record<string, { message: string }>;
 }
 
-export default function ErrorBanner({
-  message,
-  errors,
-}: ErrorBannerProps): ReactElement {
+const ErrorBanner = ({ message, errors }: ErrorBannerProps): ReactElement => {
   return (
     <Alert severity="error">
       <AlertTitle>Error</AlertTitle>
@@ -28,4 +25,6 @@ export default function ErrorBanner({
       )}
     </Alert>
   );
-}
+};
+
+export default ErrorBanner;

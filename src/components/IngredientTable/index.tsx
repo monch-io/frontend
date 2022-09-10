@@ -4,10 +4,10 @@ import type { Ingredient } from "monch-backend/build/types/ingredient";
 import { Pagination } from "monch-backend/build/types/pagination";
 import { Link } from "react-router-dom";
 
-type IngredientLinkProps = {
+interface IngredientLinkProps {
   name: string;
   id: string;
-};
+}
 
 export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
   return (

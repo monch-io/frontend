@@ -5,10 +5,10 @@ import type { RecipeWithoutIngredients } from "monch-backend/build/types/recipe"
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
-type RecipeLinkProps = {
+interface RecipeLinkProps {
   name?: string;
   id: string;
-};
+}
 
 export const RecipeLink = ({ name, id }: RecipeLinkProps) => {
   return (

@@ -4,10 +4,10 @@ import type { QuantifiedIngredient } from "monch-backend/build/types/quantified-
 import { IngredientLink } from "../IngredientTable";
 import type { Unit } from "monch-backend/build/types/unit";
 
-type RecipeTableProps = {
+interface RecipeTableProps {
   items: QuantifiedIngredient[];
   pageSize?: number;
-};
+}
 
 function formatQuantity(amount: number, unit: Unit | undefined): string {
   if (unit !== "piece") {
