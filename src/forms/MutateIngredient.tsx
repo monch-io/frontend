@@ -5,7 +5,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "../utils/trpc";
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
 import {
   Box,
   FormControl,
@@ -39,6 +39,8 @@ function MutateIngredientForm({
   value,
 }: MutateIngredientFormProps) {
   const theme = useTheme();
+  const [error, setError] = useState("");
+
   const {
     control,
     register,
@@ -57,21 +59,40 @@ function MutateIngredientForm({
     },
   });
 
-  const { isLoading, isError, data, error, mutateAsync } =
-    trpc.useMutation("ingredients.create");
-
-  const onSubmit: SubmitHandler<CreateIngredient> = async (data) => {
-    await mutateAsync({ ...data });
+  const onSuccess = () => {
+    if (typeof onCompletion === "function") {
+      onCompletion();
+    }
   };
 
-  // When the request completes, we want to re-direct the user to the publication page
-  useEffect(() => {
-    if (data) {
-      if (typeof onCompletion === "function") {
-        onCompletion();
-      }
+  // Create mutations for creating and updating the `recipe`
+  const createQuery = trpc.useMutation(["ingredients.create"], {
+    onSuccess,
+    onError: (data) => setError(data.message),
+  });
+  const updateQuery = trpc.useMutation(["ingredients.update"], {
+    onSuccess,
+    onError: (data) => setError(data.message),
+  });
+
+  const isLoading = useCallback(() => {
+    if (mode === "update") {
+      return updateQuery.isLoading;
+    } else {
+      return createQuery.isLoading;
     }
-  }, [isLoading, isError]);
+  }, [createQuery.isLoading, updateQuery.isLoading]);
+
+  const onSubmit: SubmitHandler<CreateIngredient> = async (data) => {
+    // reset the error since we're re-submitting
+    setError("");
+
+    if (mode === "update") {
+      await updateQuery.mutateAsync({ data, id: value.id });
+    } else {
+      await createQuery.mutateAsync({ ...data });
+    }
+  };
 
   return (
     <form
@@ -104,7 +125,7 @@ function MutateIngredientForm({
         <Grid item xs={12} sx={{ pt: 1 }}></Grid>
         <Grid>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {isError && error && <ErrorBanner message={error.message} />}
+            {error !== "undefined" && <ErrorBanner message={error} />}
             <Box
               sx={{
                 display: "flex",
@@ -114,7 +135,7 @@ function MutateIngredientForm({
               }}
             >
               <LoadingButton
-                loading={isLoading || isSubmitting}
+                loading={isLoading() || isSubmitting}
                 disabled={!isValid}
                 color="primary"
                 variant={"contained"}
