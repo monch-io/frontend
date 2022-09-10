@@ -1,8 +1,7 @@
-import { GlobalStyles, Stack, Typography } from "@mui/material";
+import { Link, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { Ingredient } from "monch-backend/build/types/ingredient";
 import { Pagination } from "monch-backend/build/types/pagination";
-import { Link } from "react-router-dom";
 
 interface IngredientLinkProps {
   name: string;
@@ -10,25 +9,7 @@ interface IngredientLinkProps {
 }
 
 export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
-  return (
-    <>
-      <GlobalStyles
-        styles={(theme) => ({
-          ".hoverable": {
-            textDecoration: "none !important",
-            color: theme.palette.text.primary,
-            cursor: "pointer",
-            "&:hover": {
-              color: theme.palette.primary.main,
-            },
-          },
-        })}
-      />
-      <Link className="hoverable" to={`/ingredients/${id}`}>
-        {name}
-      </Link>
-    </>
-  );
+  return <Link href={`/ingredients/${id}`}>{name}</Link>;
 };
 
 type IngredientTableProps = {

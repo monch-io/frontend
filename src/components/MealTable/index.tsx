@@ -1,8 +1,7 @@
-import { GlobalStyles, Stack, Typography } from "@mui/material";
+import { Link, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { Meal } from "monch-backend/build/types/meal";
 import { Pagination } from "monch-backend/build/types/pagination";
-import { Link } from "react-router-dom";
 import { RecipeLink } from "../RecipeTable";
 
 interface MealLinkProps {
@@ -11,25 +10,7 @@ interface MealLinkProps {
 }
 
 export const MealLink = ({ name, id }: MealLinkProps) => {
-  return (
-    <>
-      <GlobalStyles
-        styles={(theme) => ({
-          ".hoverable": {
-            textDecoration: "none !important",
-            color: theme.palette.text.primary,
-            cursor: "pointer",
-            "&:hover": {
-              color: theme.palette.primary.main,
-            },
-          },
-        })}
-      />
-      <Link className="hoverable" to={`/meals/${id}`}>
-        {name}
-      </Link>
-    </>
-  );
+  return <Link href={`/meals/${id}`}>{name}</Link>;
 };
 
 type MealTableProps = {

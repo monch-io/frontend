@@ -1,9 +1,8 @@
-import { Chip, GlobalStyles, Stack, Typography } from "@mui/material";
+import { Chip, Link, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Pagination } from "monch-backend/build/types/pagination";
 import type { RecipeWithoutIngredients } from "monch-backend/build/types/recipe";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
 
 interface RecipeLinkProps {
   name?: string;
@@ -11,25 +10,7 @@ interface RecipeLinkProps {
 }
 
 export const RecipeLink = ({ name, id }: RecipeLinkProps) => {
-  return (
-    <>
-      <GlobalStyles
-        styles={(theme) => ({
-          ".hoverable": {
-            textDecoration: "none !important",
-            color: theme.palette.text.primary,
-            cursor: "pointer",
-            "&:hover": {
-              color: theme.palette.primary.main,
-            },
-          },
-        })}
-      />
-      <Link className="hoverable" to={`/recipes/${id}`}>
-        {name || id}
-      </Link>
-    </>
-  );
+  return <Link href={`/recipes/${id}`}>{name || id}</Link>;
 };
 
 type RecipeTableProps = {
