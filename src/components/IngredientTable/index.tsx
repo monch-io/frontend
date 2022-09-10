@@ -56,8 +56,8 @@ const IngredientTable = ({
           field: "name",
           headerName: "Name",
           editable: true,
-          valueGetter: (values) => {
-            return values.row.name;
+          renderCell: (values) => {
+            return <IngredientLink name={values.row.name} id={values.row.id} />;
           },
           width: 200,
         },

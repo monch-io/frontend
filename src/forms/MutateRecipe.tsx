@@ -9,27 +9,43 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
-import { CreateRecipe } from "monch-backend/build/types/recipe";
-import { useEffect } from "react";
+import { CreateRecipe, Recipe } from "monch-backend/build/types/recipe";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import ErrorBanner from "../components/ErrorBanner";
 import ControlledTagField from "../components/Field/ControlledTagField";
 import ControlledTextField from "../components/Field/ControlledTextField";
 import FieldLabel from "../components/Field/FieldLabel";
 import { trpc } from "../utils/trpc";
-
 import { MdOutlineDelete } from "react-icons/md";
+import { useCallback, useState } from "react";
 
 type CreateRecipeFormProps = {
   onCompletion?: () => void;
-};
+
+  // whether the mutation is creating or updating a record
+} & (
+  | {
+      mode: "create";
+      value?: undefined;
+    }
+  | {
+      mode: "update";
+      value: Recipe;
+    }
+);
 
 // @@Todo: move this into the backend, and this should be narrowed down by the
 // unit type that is specified on the ingredient.
 const UNITS = ["unit", "Kg", "g", "ml", "l"];
 
-function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
+function MutateRecipeForm({
+  onCompletion,
+  mode,
+  value,
+}: CreateRecipeFormProps) {
   const theme = useTheme();
+  const [error, setError] = useState("");
+
   const {
     control,
     register,
@@ -40,10 +56,14 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
     reValidateMode: "onChange",
     mode: "onChange",
     defaultValues: {
-      name: "",
-      description: "",
-      tags: [],
-      ingredients: [],
+      ...(mode === "update"
+        ? { ...value }
+        : {
+            name: "",
+            description: "",
+            tags: [],
+            ingredients: [],
+          }),
     },
   });
 
@@ -53,21 +73,40 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
     name: "ingredients",
   });
 
-  const { isLoading, isError, data, error, mutateAsync } =
-    trpc.useMutation("recipes.create");
-
-  const onSubmit: SubmitHandler<CreateRecipe> = async (data) => {
-    await mutateAsync({ ...data });
+  const onSuccess = () => {
+    if (typeof onCompletion === "function") {
+      onCompletion();
+    }
   };
 
-  // When the request completes, we want to re-direct the user to the publication page
-  useEffect(() => {
-    if (data) {
-      if (typeof onCompletion === "function") {
-        onCompletion();
-      }
+  // Create mutations for creating and updating the `recipe`
+  const createQuery = trpc.useMutation(["recipes.create"], {
+    onSuccess,
+    onError: (data) => setError(data.message),
+  });
+  const updateQuery = trpc.useMutation(["recipes.update"], {
+    onSuccess,
+    onError: (data) => setError(data.message),
+  });
+
+  const isLoading = useCallback(() => {
+    if (mode === "update") {
+      return updateQuery.isLoading;
+    } else {
+      return createQuery.isLoading;
     }
-  }, [isLoading, isError]);
+  }, [createQuery.isLoading, updateQuery.isLoading]);
+
+  const onSubmit: SubmitHandler<CreateRecipe> = async (data) => {
+    // reset the error since we're re-submitting
+    setError("");
+
+    if (mode === "update") {
+      await updateQuery.mutateAsync({ data, id: value.id });
+    } else {
+      await createQuery.mutateAsync({ ...data });
+    }
+  };
 
   return (
     <form
@@ -174,7 +213,7 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
 
         <Grid item xs={12} sx={{ pt: 1 }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {isError && error && <ErrorBanner message={error.message} />}
+            {error !== "" && <ErrorBanner message={error} />}
             <Box
               sx={{
                 display: "flex",
@@ -184,13 +223,13 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
               }}
             >
               <LoadingButton
-                loading={isLoading || isSubmitting}
+                loading={isLoading() || isSubmitting}
                 disabled={!isValid}
                 color="primary"
                 variant={"contained"}
                 type="submit"
               >
-                Create
+                {mode === "update" ? "Update" : "Create"}
               </LoadingButton>
             </Box>
           </Box>
@@ -200,4 +239,4 @@ function CreateRecipeForm({ onCompletion }: CreateRecipeFormProps) {
   );
 }
 
-export default CreateRecipeForm;
+export default MutateRecipeForm;

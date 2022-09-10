@@ -1,4 +1,7 @@
-import { CreateIngredient } from "monch-backend/build/types/ingredient";
+import {
+  CreateIngredient,
+  Ingredient,
+} from "monch-backend/build/types/ingredient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "../utils/trpc";
@@ -16,11 +19,25 @@ import ErrorBanner from "../components/ErrorBanner";
 import FieldLabel from "../components/Field/FieldLabel";
 import ControlledTextField from "../components/Field/ControlledTextField";
 
-type CreateIngredientFormProps = {
+type MutateIngredientFormProps = {
   onCompletion?: () => void;
-};
+  // whether the mutation is creating or updating a record
+} & (
+  | {
+      mode: "create";
+      value?: undefined;
+    }
+  | {
+      mode: "update";
+      value: Ingredient;
+    }
+);
 
-function CreateIngredientForm({ onCompletion }: CreateIngredientFormProps) {
+function MutateIngredientForm({
+  onCompletion,
+  mode,
+  value,
+}: MutateIngredientFormProps) {
   const theme = useTheme();
   const {
     control,
@@ -32,7 +49,11 @@ function CreateIngredientForm({ onCompletion }: CreateIngredientFormProps) {
     reValidateMode: "onChange",
     mode: "onChange",
     defaultValues: {
-      name: "",
+      ...(mode === "update"
+        ? { ...value }
+        : {
+            name: "",
+          }),
     },
   });
 
@@ -99,7 +120,7 @@ function CreateIngredientForm({ onCompletion }: CreateIngredientFormProps) {
                 variant={"contained"}
                 type="submit"
               >
-                Create
+                {mode === "update" ? "Update" : "Create"}
               </LoadingButton>
             </Box>
           </Box>
@@ -109,4 +130,4 @@ function CreateIngredientForm({ onCompletion }: CreateIngredientFormProps) {
   );
 }
 
-export default CreateIngredientForm;
+export default MutateIngredientForm;
