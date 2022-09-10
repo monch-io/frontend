@@ -3,13 +3,25 @@ import { Outlet } from "react-router-dom";
 import { Box, Divider, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import Nav from "./components/Nav";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { trpc } from "./utils/trpc";
 import { useState } from "react";
 import Theme from "./theme";
 
+// API querying client.
+const queryCache = new QueryCache();
+const queryClient = new QueryClient({
+  queryCache,
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      enabled: true,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 function App() {
-  const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
       url: process.env["REACT_APP_API_ENDPOINT"] as string,

@@ -1,14 +1,19 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
-type ContentKind = "recipes" | "meals" | "ingredients";
+type ContentKind = "recipes" | "meals" | "ingredients" | "inventory";
 
 type ContentLayoutProps = {
   title: string;
   kind: ContentKind;
+  withCreation?: boolean;
 };
 
-function ContentLayout({ title, kind }: ContentLayoutProps) {
+function ContentLayout({
+  title,
+  kind,
+  withCreation = true,
+}: ContentLayoutProps) {
   const { pathname } = useLocation();
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -23,7 +28,7 @@ function ContentLayout({ title, kind }: ContentLayoutProps) {
       >
         <Typography variant={"h4"}>{title}</Typography>
 
-        {!pathname.endsWith("/new") && (
+        {withCreation && !pathname.endsWith("/new") && (
           <Link
             to={`/${kind}/new`}
             style={{ textDecoration: "none", color: "inherit" }}

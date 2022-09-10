@@ -1,13 +1,12 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-// import { MdSearch } from "react-icons/md";
 
-type SearchProps = {
+interface SearchProps {
   text?: string;
   onChange: (value: string) => void;
-};
+}
 
-export default function Search({ text = "Search", onChange }: SearchProps) {
+const Search = ({ text = "Search", onChange }: SearchProps) => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
 
@@ -45,4 +44,6 @@ export default function Search({ text = "Search", onChange }: SearchProps) {
       )}
     />
   );
-}
+};
+
+export default Search;

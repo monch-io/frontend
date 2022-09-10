@@ -1,13 +1,14 @@
 import { GlobalStyles, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import type { Meal } from "monch-backend/src/types/meal";
+import type { Meal } from "monch-backend/build/types/meal";
+import { Pagination } from "monch-backend/build/types/pagination";
 import { Link } from "react-router-dom";
 import { RecipeLink } from "../RecipeTable";
 
-type MealLinkProps = {
+interface MealLinkProps {
   name: string;
   id: string;
-};
+}
 
 export const MealLink = ({ name, id }: MealLinkProps) => {
   return (
@@ -32,11 +33,19 @@ export const MealLink = ({ name, id }: MealLinkProps) => {
 };
 
 type MealTableProps = {
+  // Meals that are returned from query.
   items: Meal[];
-  pageSize?: number;
+  // Current pagination state.
+  pagination: Pagination;
+  // Function that handles pagination changes from the table
+  onPaginationChange: (value: Pagination) => void;
 };
 
-const MealTable = ({ items, pageSize = 20 }: MealTableProps) => {
+const MealTable = ({
+  items,
+  pagination,
+  onPaginationChange,
+}: MealTableProps) => {
   return (
     <DataGrid
       autoHeight
@@ -58,8 +67,12 @@ const MealTable = ({ items, pageSize = 20 }: MealTableProps) => {
           width: 200,
         },
       ]}
-      pageSize={pageSize}
-      rowsPerPageOptions={[pageSize]}
+      pageSize={pagination.take}
+      rowsPerPageOptions={[pagination.take]}
+      onPageChange={(page) =>
+        onPaginationChange({ ...pagination, skip: page * pagination.take })
+      }
+      onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
       rows={items}
       components={{
         NoRowsOverlay: () => (

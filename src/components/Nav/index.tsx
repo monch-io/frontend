@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
+import { MdInventory } from "react-icons/md";
 import { GiMeal, GiFruitBowl } from "react-icons/gi";
 import { BiHome } from "react-icons/bi";
 import { CgNotes } from "react-icons/cg";
@@ -49,6 +50,7 @@ const Nav = () => {
       <LinkItem to={"/meals"} text={"Meals"} Icon={GiMeal} />
       <LinkItem to={"/recipes"} text={"Recipe"} Icon={CgNotes} />
       <LinkItem to={"/ingredients"} text={"Ingredients"} Icon={GiFruitBowl} />
+      <LinkItem to={"/inventory"} text={"Inventory"} Icon={MdInventory} />
     </List>
   );
 };
