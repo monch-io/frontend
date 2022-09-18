@@ -29,6 +29,7 @@ const MealTable = ({
 }: MealTableProps) => {
   return (
     <DataGrid
+      pagination
       autoHeight
       columns={[
         {

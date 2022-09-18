@@ -23,18 +23,7 @@ import FieldLabel from "../components/Field/FieldLabel";
 import { trpc } from "../utils/trpc";
 import { MdOutlineDelete } from "react-icons/md";
 import { useCallback, useState } from "react";
-import {
-  AmountUnit,
-  VolumeUnit,
-  WeightUnit,
-} from "monch-backend/build/types/unit";
-
-// @@Todo: should be narrowed down by the unit type that is specified on the ingredient.
-const UNITS = [
-  ...AmountUnit.options,
-  ...WeightUnit.options,
-  ...VolumeUnit.options,
-] as const;
+import { UNITS } from "../utils/units";
 
 interface IngredientSelectionListProps {
   form: UseFormReturn<CreateRecipe>;

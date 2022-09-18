@@ -4,15 +4,15 @@ import type { Ingredient } from "monch-backend/build/types/ingredient";
 import { Pagination } from "monch-backend/build/types/pagination";
 
 interface IngredientLinkProps {
-  name: string;
+  name?: string;
   id: string;
 }
 
 export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
-  return <Link href={`/ingredients/${id}`}>{name}</Link>;
+  return <Link href={`/ingredients/${id}`}>{name ?? id}</Link>;
 };
 
-type IngredientTableProps = {
+interface IngredientTableProps {
   // All of the shown items
   items: Ingredient[];
 
@@ -21,7 +21,7 @@ type IngredientTableProps = {
 
   // Function that handles pagination changes from the table
   onPaginationChange: (value: Pagination) => void;
-};
+}
 
 const IngredientTable = ({
   items,
@@ -30,6 +30,7 @@ const IngredientTable = ({
 }: IngredientTableProps) => {
   return (
     <DataGrid
+      pagination
       autoHeight
       checkboxSelection
       columns={[
