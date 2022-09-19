@@ -13,7 +13,7 @@ const Ingredients = () => {
     take: 50,
   });
 
-  const { data, isError, error } = trpc.useQuery([
+  const { data, isLoading, refetch, isError, error } = trpc.useQuery([
     "ingredients.search",
     { query: { text: ingredient }, pagination },
   ]);
@@ -27,6 +27,8 @@ const Ingredients = () => {
         ) : (
           <IngredientTable
             items={data?.items ?? []}
+            loading={isLoading}
+            refetch={refetch}
             pagination={pagination}
             onPaginationChange={setPagination}
           />

@@ -1,40 +1,56 @@
-import { Box, MenuItem, TextField } from "@mui/material";
-import { GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid";
-import { Dimension, Unit } from "monch-backend/build/types/unit";
-import { Quantity } from "monch-backend/build/types/quantity";
-import { UNITS } from "../../utils/units";
+import { z } from "zod";
 import { useState } from "react";
-import { ZodError } from "zod";
+import { DefaultUnit, Units } from "../../utils/units";
+import { Box, MenuItem, TextField } from "@mui/material";
+import { Dimension, Unit } from "monch-backend/build/types/unit";
+import { GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid";
+import { expr } from "../../utils/expr";
 
 type GridQuantityPickerProps = GridRenderEditCellParams<{
   value: number;
-  unit: Unit;
+  unit?: Unit;
 }> & {
-  dimension?: Dimension;
+  dimension: Dimension;
 };
 
+export const QuantityUpdate = z.object({
+  value: z.preprocess(
+    (a) => parseFloat(z.string().describe("expected value").parse(a)),
+    z.number().positive().describe("expected value")
+  ),
+  unit: Unit,
+});
+
 export const GridQuantityPicker = (props: GridQuantityPickerProps) => {
-  const { id, value, field } = props;
+  const { id, value, field, dimension } = props;
+  const [fieldValues, setFieldValues] = useState({
+    unit: value?.unit?.toString() ?? DefaultUnit[dimension],
+    value: value?.value.toString() ?? "0",
+  });
+
   const gridRef = useGridApiContext();
-  const [error, setError] = useState<ZodError<Quantity> | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value; // The new value entered by the user
     const name = event.target.name;
+    const update = { ...fieldValues, ...{ [name]: event.target.value } };
 
-    // We need to perform validation using the `Quantity` schema
-    const update = { ...value, ...{ [name]: newValue } };
-    const result = Quantity.safeParse(update);
+    // Update the value of the fields state
+    setFieldValues(update);
+    const result = QuantityUpdate.safeParse(update);
 
-    if (!result.success) {
-      setError(result.error);
-    } else {
-      gridRef.current.setEditCellValue({
-        id,
-        field,
-        value: result.data,
-      });
-    }
+    const newValue = expr(() => {
+      if (result.success) {
+        return { ...result.data, hasError: false };
+      } else {
+        return { ...value, hasError: true };
+      }
+    });
+
+    gridRef.current.setEditCellValue({
+      id,
+      field,
+      value: newValue,
+    });
   };
 
   return (
@@ -50,22 +66,22 @@ export const GridQuantityPicker = (props: GridQuantityPickerProps) => {
         name="value"
         size="small"
         variant="outlined"
-        value={value?.value || 0}
+        value={fieldValues.value}
         sx={{ width: 80 }}
         onChange={handleChange}
-        error={!!error}
       />
       <TextField
         name="unit"
         size="small"
         select
-        value={value?.unit || "piece"}
+        value={fieldValues.unit}
         onChange={handleChange}
+        disabled={dimension === "amount"}
         variant="outlined"
         sx={{ ml: 1, width: 85 }}
-        defaultValue={"piece"}
+        defaultValue={DefaultUnit[dimension]}
       >
-        {UNITS.map((unit) => (
+        {Units[dimension].map((unit) => (
           <MenuItem key={unit} value={unit}>
             {unit}
           </MenuItem>

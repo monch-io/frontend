@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
   queryCache,
   defaultOptions: {
     queries: {
-      retry: 0,
+      retry: false,
       enabled: true,
       refetchOnWindowFocus: false,
     },

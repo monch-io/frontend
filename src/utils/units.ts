@@ -10,3 +10,15 @@ export const UNITS = [
   ...WeightUnit.options,
   ...VolumeUnit.options,
 ] as const;
+
+export const Units = {
+  amount: [...AmountUnit.options],
+  weight: [...WeightUnit.options],
+  volume: [...VolumeUnit.options],
+};
+
+export const DefaultUnit = {
+  amount: "piece",
+  weight: "g",
+  volume: "ml",
+};

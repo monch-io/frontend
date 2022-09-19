@@ -13,8 +13,8 @@ const Inventory = () => {
     take: 50,
   });
 
-  const { data, isLoading, isError, error } = trpc.useQuery([
-    "inventory.getInventory",
+  const { data, isLoading, isError, error, refetch } = trpc.useQuery([
+    "inventory.getInventoryWithDetails",
     { query: { text: inventorySearch }, pagination },
   ]);
 
@@ -29,6 +29,7 @@ const Inventory = () => {
             items={Object.values(data?.entriesByIngredientId || {})}
             pagination={pagination}
             onPaginationChange={setPagination}
+            refetch={refetch}
           />
         ) : (
           "loading"
