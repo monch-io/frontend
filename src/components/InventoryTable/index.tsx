@@ -2,17 +2,14 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridEventListener,
-  // GridEventListener,
   GridPreProcessEditCellProps,
   GridRenderEditCellParams,
   GridRowId,
   GridRowModes,
   GridRowModesModel,
   GridRowParams,
-  // GridRowParams,
   GridToolbarContainer,
   MuiEvent,
-  // MuiEvent,
 } from "@mui/x-data-grid";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import type { QuantifiedIngredient } from "monch-backend/build/types/quantified-ingredient";
@@ -64,15 +61,15 @@ function formatQuantity(amount: number, unit: Unit | undefined): string {
 type InventoryRowItem = QuantifiedIngredient;
 
 interface InventoryTableProps {
-  // All of the shown items
+  /** All of the shown items */
   items: InventoryRowItem[];
-  // Current pagination state.
+  /** Current pagination state. */
   pagination: Pagination;
-  // Function that handles pagination changes from the table
+  /** Function that handles pagination changes from the table */
   onPaginationChange: (value: Pagination) => void;
-  // Whether the external data source is still loading
+  /** Whether the external data source is still loading */
   loading?: boolean;
-  // Request for the data source to be re-fetched.
+  /** Request for the data source to be re-fetched. */
   refetch: () => Promise<unknown>;
 }
 
@@ -297,7 +294,10 @@ const InventoryTable = ({
         rowsPerPageOptions={[pagination.take]}
         pageSize={pagination.take}
         onPageChange={(page) =>
-          onPaginationChange({ ...pagination, skip: page * pagination.take })
+          onPaginationChange({
+            ...pagination,
+            skip: (page - 1) * pagination.take,
+          })
         }
         onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
         rows={rows}

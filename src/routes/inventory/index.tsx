@@ -2,12 +2,12 @@ import { Box } from "@mui/material";
 import { Pagination } from "monch-backend/build/types/pagination";
 import { useState } from "react";
 import ErrorBanner from "../../components/ErrorBanner";
-import Search from "../../components/Field/Search";
+// import Search from "../../components/Field/Search";
 import InventoryTable from "../../components/InventoryTable";
 import { trpc } from "../../utils/trpc";
 
 const Inventory = () => {
-  const [inventorySearch, setInventorySearch] = useState("");
+  // const [inventorySearch, setInventorySearch] = useState("");
   const [pagination, setPagination] = useState<Pagination>({
     skip: 0,
     take: 50,
@@ -15,12 +15,12 @@ const Inventory = () => {
 
   const { data, isLoading, isError, error, refetch } = trpc.useQuery([
     "inventory.getInventoryWithDetails",
-    { query: { text: inventorySearch }, pagination },
+    {},
   ]);
 
   return (
     <>
-      <Search text={"Search inventory"} onChange={setInventorySearch} />
+      {/* <Search text={"Search inventory"} onChange={setInventorySearch} /> */}
       <Box sx={{ pt: 1 }}>
         {isError ? (
           <ErrorBanner message={error.message} />

@@ -6,17 +6,18 @@ import { Dimension, Unit } from "monch-backend/build/types/unit";
 import { GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid";
 import { expr } from "../../utils/expr";
 
-type GridQuantityPickerProps = GridRenderEditCellParams<{
-  value: number;
-  unit?: Unit;
-}> & {
+interface GridQuantityPickerProps
+  extends GridRenderEditCellParams<{
+    value: number;
+    unit?: Unit;
+  }> {
   dimension: Dimension;
-};
+}
 
 export const QuantityUpdate = z.object({
   value: z.preprocess(
-    (a) => parseFloat(z.string().describe("expected value").parse(a)),
-    z.number().positive().describe("expected value")
+    (a) => parseFloat(z.string().parse(a)),
+    z.number().positive()
   ),
   unit: Unit,
 });

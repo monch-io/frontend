@@ -1,4 +1,4 @@
-import { Link, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack, Typography } from "@mui/material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -31,19 +31,15 @@ export const IngredientLink = ({ name, id }: IngredientLinkProps) => {
 type IngredientRowItem = Ingredient;
 
 interface IngredientTableProps {
-  // All of the shown items
+  /** All of the shown items */
   items: IngredientRowItem[];
-
-  // Current pagination state.
+  /** Current pagination state. */
   pagination: Pagination;
-
-  // Function that handles pagination changes from the table
+  /** Function that handles pagination changes from the table */
   onPaginationChange: (value: Pagination) => void;
-
-  // Whether the external data source is still loading
+  /** Whether the external data source is still loading */
   loading?: boolean;
-
-  // Request for the data source to be re-fetched.
+  /** Request for the data source to be re-fetched. */
   refetch: () => Promise<unknown>;
 }
 
@@ -238,25 +234,22 @@ const IngredientTable = ({
             },
           },
         ]}
-        {...(error !== "" && { error: true })}
         loading={loading}
         rowModesModel={rowModesModel}
         processRowUpdate={processRowUpdate}
         rowsPerPageOptions={[pagination.take]}
         pageSize={pagination.take}
         onPageChange={(page) =>
-          onPaginationChange({ ...pagination, skip: page * pagination.take })
+          onPaginationChange({
+            ...pagination,
+            skip: (page - 1) * pagination.take,
+          })
         }
         onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
         components={{
           NoRowsOverlay: () => (
             <Stack height="100%" alignItems="center" justifyContent="center">
               <Typography>No ingredients yet</Typography>
-            </Stack>
-          ),
-          ErrorOverlay: () => (
-            <Stack height="100%" alignItems="center" justifyContent="center">
-              <ErrorBanner message={error} />
             </Stack>
           ),
           LoadingOverlay: () => (
@@ -266,6 +259,11 @@ const IngredientTable = ({
           ),
         }}
       />
+      {error !== "" && (
+        <Box sx={{ mt: 1 }}>
+          <ErrorBanner message={error} />
+        </Box>
+      )}
       <ConfirmationDialogue
         isOpen={dialogueOpen !== null}
         onClose={() => setDialogueOpen(null)}

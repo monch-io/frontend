@@ -52,7 +52,10 @@ const MealTable = ({
       pageSize={pagination.take}
       rowsPerPageOptions={[pagination.take]}
       onPageChange={(page) =>
-        onPaginationChange({ ...pagination, skip: page * pagination.take })
+        onPaginationChange({
+          ...pagination,
+          skip: (page - 1) * pagination.take,
+        })
       }
       onPageSizeChange={(take) => onPaginationChange({ ...pagination, take })}
       rows={items}

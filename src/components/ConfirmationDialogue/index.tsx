@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-type ConfirmationDialogueProps = {
+interface ConfirmationDialogueProps {
   isOpen: boolean;
   submitEnabled: boolean;
   onClose: () => void;
@@ -13,9 +13,9 @@ type ConfirmationDialogueProps = {
   message: string;
   title: string;
   confirmationLabel?: string;
-};
+}
 
-export default function ConfirmationDialogue({
+const ConfirmationDialogue = ({
   title,
   message,
   confirmationLabel = "Confirm",
@@ -23,7 +23,7 @@ export default function ConfirmationDialogue({
   submitEnabled,
   onClose,
   onConfirm,
-}: ConfirmationDialogueProps) {
+}: ConfirmationDialogueProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
@@ -43,4 +43,6 @@ export default function ConfirmationDialogue({
       </DialogActions>
     </Dialog>
   );
-}
+};
+
+export default ConfirmationDialogue;
