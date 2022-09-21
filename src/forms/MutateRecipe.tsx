@@ -1,14 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  MenuItem,
-  TextField,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Grid, IconButton, useTheme } from "@mui/material";
 import { CreateRecipe, Recipe } from "monch-backend/build/types/recipe";
 import {
   SubmitHandler,
@@ -23,32 +15,18 @@ import FieldLabel from "../components/Field/FieldLabel";
 import { trpc } from "../utils/trpc";
 import { MdOutlineDelete } from "react-icons/md";
 import { useCallback, useState } from "react";
-import {
-  AmountUnit,
-  VolumeUnit,
-  WeightUnit,
-} from "monch-backend/build/types/unit";
-
-// @@Todo: should be narrowed down by the unit type that is specified on the ingredient.
-const UNITS = [
-  ...AmountUnit.options,
-  ...WeightUnit.options,
-  ...VolumeUnit.options,
-] as const;
+import ControlledIngredientField from "../components/Field/ControlledIngredientField";
+import ControlledQuantityPicker from "../components/Field/ControlledQuantityPicker";
 
 interface IngredientSelectionListProps {
   form: UseFormReturn<CreateRecipe>;
 }
 
 const IngredientSelectionList = ({
-  form: {
-    register,
-    control,
-    formState: { errors },
-  },
+  form: { control },
 }: IngredientSelectionListProps) => {
   // Register the input field for the sets
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, update, remove } = useFieldArray({
     control,
     name: "ingredients",
   });
@@ -56,11 +34,7 @@ const IngredientSelectionList = ({
   return (
     <Grid item xs={12} sx={{ pt: 1 }}>
       <FieldLabel label="Ingredients" required />
-      {fields.map((_, index: number) => {
-        const { ingredients } = errors;
-        const nameError = ingredients?.[index]?.ingredientId ?? "";
-        const quantityError = ingredients?.[index]?.quantity ?? "";
-
+      {fields.map((item, index: number) => {
         return (
           <Box
             key={index}
@@ -73,59 +47,23 @@ const IngredientSelectionList = ({
               pb: 0.5,
             }}
           >
-            {
-              //@@Todo: use ingredient search here...
-            }
-            <TextField
-              size="small"
-              variant="outlined"
-              {...register(`ingredients.${index}.ingredientId`)}
-              {...(nameError !== ""
-                ? {
-                    error: true,
-                    helperText: nameError.message ?? "",
-                  }
-                : {
-                    sx: {
-                      pb: 2.5,
-                    },
-                  })}
+            <ControlledIngredientField
+              control={control}
+              name={`ingredients.${index}.ingredientId`}
+              initialIngredientId={item.ingredientId}
+              onUnitChange={(unit) => {
+                update(index, {
+                  ...item,
+                  quantity: { ...item.quantity, unit },
+                });
+              }}
             />
-            <Box>
-              <TextField
-                size="small"
-                variant="outlined"
-                type="number"
-                {...register(`ingredients.${index}.quantity.value`, {
-                  valueAsNumber: true,
-                })}
-                {...(quantityError !== ""
-                  ? {
-                      error: true,
-                      helperText: quantityError.message ?? "",
-                    }
-                  : {
-                      sx: {
-                        pb: 2.5,
-                      },
-                    })}
-              />
-              <TextField
-                size="small"
-                select
-                variant="outlined"
-                {...register(`ingredients.${index}.quantity.unit`)}
-                sx={{ ml: 1, width: 85 }}
-                defaultValue={"piece"}
-              >
-                {UNITS.map((unit) => (
-                  <MenuItem key={unit} value={unit}>
-                    {unit}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Box>
-            <IconButton onClick={() => remove(index)} sx={{ mb: 2.5 }}>
+            <ControlledQuantityPicker
+              name={`ingredients.${index}.quantity.value`}
+              control={control}
+              unit={item.quantity.unit}
+            />
+            <IconButton onClick={() => remove(index)}>
               <MdOutlineDelete color="error" />
             </IconButton>
           </Box>

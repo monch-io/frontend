@@ -1,4 +1,5 @@
 import "./App.css";
+import superjson from "superjson";
 import { Outlet } from "react-router-dom";
 import { Box, Divider, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
@@ -14,16 +15,18 @@ const queryClient = new QueryClient({
   queryCache,
   defaultOptions: {
     queries: {
-      retry: 0,
-      enabled: true,
       refetchOnWindowFocus: false,
+      retry: false,
+      refetchOnMount: false,
     },
+    mutations: { retry: false },
   },
 });
 
 function App() {
   const [trpcClient] = useState(() =>
     trpc.createClient({
+      transformer: superjson,
       url: process.env["REACT_APP_API_ENDPOINT"] as string,
     })
   );

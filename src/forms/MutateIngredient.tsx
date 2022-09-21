@@ -110,6 +110,7 @@ function MutateIngredientForm({
             <Select
               {...register("dimension")}
               defaultValue="amount"
+              disabled={mode === "update"}
               size="small"
               sx={{
                 marginTop: 1,

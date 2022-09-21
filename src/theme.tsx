@@ -1,4 +1,18 @@
-import { createTheme } from "@mui/material";
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from "react-router-dom";
+import { createTheme, LinkProps } from "@mui/material";
+import { forwardRef } from "react";
+
+const LinkBehavior = forwardRef<
+  HTMLAnchorElement,
+  Omit<RouterLinkProps, "to"> & { href: RouterLinkProps["to"] }
+>((props, ref) => {
+  const { href, ...other } = props;
+  // Map href (MUI) -> to (react-router)
+  return <RouterLink ref={ref} to={href} {...other} />;
+});
 
 // The application theme
 const Theme = createTheme({
@@ -44,6 +58,18 @@ const Theme = createTheme({
   },
 
   components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+        underline: "none",
+        sx: {
+          color: (t) => t.palette.text.primary,
+          "&:hover": {
+            color: (t) => t.palette.primary.main,
+          },
+        },
+      } as LinkProps,
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
