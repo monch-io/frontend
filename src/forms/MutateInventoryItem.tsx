@@ -8,16 +8,14 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  MenuItem,
-  TextField,
 } from "@mui/material";
 import { QuantifiedIngredientRef } from "monch-backend/build/types/quantified-ingredient";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorBanner from "../components/ErrorBanner";
-import ControlledTextField from "../components/Field/ControlledTextField";
+import ControlledQuantityPicker from "../components/Field/ControlledQuantityPicker";
 import FieldLabel from "../components/Field/FieldLabel";
+import ControlledIngredientField from "../components/Field/ControlledIngredientField";
 import { trpc } from "../utils/trpc";
-import { UNITS } from "../utils/units";
 
 type MutateInventoryItemFormProps = {
   onClose: () => void;
@@ -43,9 +41,10 @@ const MutateInventoryItemForm = ({
 }: MutateInventoryItemFormProps) => {
   const {
     control,
-    register,
     handleSubmit,
-    formState: { isValid, errors, isSubmitting },
+    getValues,
+    setValue,
+    formState: { isValid, isSubmitting },
   } = useForm<QuantifiedIngredientRef>({
     resolver: zodResolver(QuantifiedIngredientRef),
     reValidateMode: "onChange",
@@ -91,43 +90,18 @@ const MutateInventoryItemForm = ({
           <Grid container maxWidth={"lg"}>
             <Grid item xs={12} sx={{ pt: 1 }}>
               <FieldLabel label="Ingredient" required />
-              <ControlledTextField name="ingredientId" control={control} />
+              <ControlledIngredientField
+                name={"ingredientId"}
+                control={control}
+                onUnitChange={(unit) => setValue("quantity.unit", unit)}
+              />
             </Grid>
             <Grid item xs={12} sx={{ pt: 1 }}>
-              <Box>
-                <TextField
-                  size="small"
-                  variant="outlined"
-                  type="number"
-                  {...register(`quantity.value`, {
-                    valueAsNumber: true,
-                  })}
-                  {...(errors.quantity?.value
-                    ? {
-                        error: true,
-                        helperText: errors.quantity.value.message,
-                      }
-                    : {
-                        sx: {
-                          pb: 2.5,
-                        },
-                      })}
-                />
-                <TextField
-                  size="small"
-                  select
-                  variant="outlined"
-                  {...register(`quantity.unit`)}
-                  sx={{ ml: 1, width: 85 }}
-                  defaultValue={"piece"}
-                >
-                  {UNITS.map((unit) => (
-                    <MenuItem key={unit} value={unit}>
-                      {unit}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Box>
+              <ControlledQuantityPicker
+                control={control}
+                name={`quantity.value`}
+                unit={getValues(`quantity.unit`)}
+              />
             </Grid>
           </Grid>
         </DialogContent>

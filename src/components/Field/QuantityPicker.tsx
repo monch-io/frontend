@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { useState } from "react";
-import { DefaultUnit, Units } from "../../utils/units";
-import { Box, MenuItem, TextField } from "@mui/material";
+import { Box, InputAdornment, TextField } from "@mui/material";
 import { Dimension, Unit } from "monch-backend/build/types/unit";
 import { GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid";
 import { expr } from "../../utils/expr";
@@ -14,10 +13,20 @@ interface GridQuantityPickerProps
   dimension: Dimension;
 }
 
+function getDisplayUnitForDimension(dimension: Dimension): string {
+  if (dimension === "weight") {
+    return "kg";
+  } else if (dimension === "volume") {
+    return "l";
+  } else {
+    return "";
+  }
+}
+
 export const QuantityUpdate = z.object({
   value: z.preprocess(
     (a) => parseFloat(z.string().parse(a)),
-    z.number().positive()
+    z.number().nonnegative()
   ),
   unit: Unit,
 });
@@ -25,7 +34,7 @@ export const QuantityUpdate = z.object({
 export const GridQuantityPicker = (props: GridQuantityPickerProps) => {
   const { id, value, field, dimension } = props;
   const [fieldValues, setFieldValues] = useState({
-    unit: value?.unit?.toString() ?? DefaultUnit[dimension],
+    unit: value?.unit?.toString() ?? "piece",
     value: value?.value.toString() ?? "0",
   });
 
@@ -70,24 +79,14 @@ export const GridQuantityPicker = (props: GridQuantityPickerProps) => {
         value={fieldValues.value}
         sx={{ width: 80 }}
         onChange={handleChange}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              {getDisplayUnitForDimension(dimension)}
+            </InputAdornment>
+          ),
+        }}
       />
-      <TextField
-        name="unit"
-        size="small"
-        select
-        value={fieldValues.unit}
-        onChange={handleChange}
-        disabled={dimension === "amount"}
-        variant="outlined"
-        sx={{ ml: 1, width: 85 }}
-        defaultValue={DefaultUnit[dimension]}
-      >
-        {Units[dimension].map((unit) => (
-          <MenuItem key={unit} value={unit}>
-            {unit}
-          </MenuItem>
-        ))}
-      </TextField>
     </Box>
   );
 };

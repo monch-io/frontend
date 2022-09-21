@@ -50,8 +50,8 @@ const InventoryTableToolbar = ({ refetch }: InventoryTableToolbarProps) => {
   );
 };
 
-function formatQuantity(amount: number, unit: Unit | undefined): string {
-  if (unit !== "piece") {
+function formatQuantity(amount: number, unit?: Unit): string {
+  if (typeof unit !== "undefined" && unit !== "piece") {
     return `${amount}${unit}`;
   } else {
     return `${amount}`;
