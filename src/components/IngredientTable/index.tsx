@@ -176,10 +176,7 @@ const IngredientTable = ({
           },
           {
             field: "dimension",
-            editable: true,
             headerName: "Quantity Kind",
-            type: "singleSelect",
-            valueOptions: ["weight", "volume", "amount"],
             valueGetter: (values) => {
               return values.row.dimension;
             },
